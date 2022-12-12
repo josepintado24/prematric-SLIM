@@ -26,7 +26,16 @@ class AccesoBD
     public function todo($ind, $lim)
     {
         $con = $this->container->get('bd');
-        $query = $con->query("SELECT * FROM cursos");
+        $sql="call todosCursos(:ind, :lim)";
+        $consulta=$con->prepare($sql);
+        $consulta->binParam(':ind', $ind, PDO::PARAM_INT);
+        $consulta->binParam(':lim', $lim, PDO::PARAM_INT);
+        $consulta->execute();
+        $datos=[];
+        if($consulta->rowCount()>0){
+            
+        }
+
         return $query->fetchAll();
 
 
