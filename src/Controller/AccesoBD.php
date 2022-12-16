@@ -26,52 +26,40 @@ class AccesoBD
     public function todo($ind, $lim)
     {
         $con = $this->container->get('bd');
-        $sql="call todosCursos(:ind, :lim)";
-        $consulta=$con->prepare($sql);
-        $consulta->binParam(':ind', $ind, PDO::PARAM_INT);
-        $consulta->binParam(':lim', $lim, PDO::PARAM_INT);
+        $sql = "call all_curso(:ind, :lim)";
+        $consulta = $con->prepare($sql);
+        $consulta->bindParam(':ind', $ind, PDO::PARAM_INT);
+        $consulta->bindParam(':lim', $lim, PDO::PARAM_INT);
         $consulta->execute();
-        $datos=[];
-        if($consulta->rowCount()>0){
+        $datos = [];
+        
+        if ($consulta->rowCount() > 0) {
+            $i = 0;
+            while ($reg = $consulta->fetch(PDO::FETCH_ASSOC)) {
             
+                $i++;
+                foreach ($reg as $clave => $valor) {
+                    $datos[$i][$clave] = $valor;
+                }
+            }
         }
+        $consulta=null;
+        $con = null;
+        return $datos;
 
-        return $query->fetchAll();
-
-
-        //     $indice = ($pagina - 1) * $limite;
-        //     $conexion = $this->container->get('bd');
-        //     $sql = "CALL all$tabla(:indice, :limite)";
-        //     $query = $conexion->prepare($sql);
-        //     $query->bindParam(':indice', $indice, PDO::PARAM_INT);
-        //     $query->bindParam(':limite', $limite, PDO::PARAM_INT);
-        //     $query->execute();
-        //     $datos = [];
-        //     if ($query->rowCount() > 0) {
-        //         $i = 0;
-        //         while ($reg = $query->fetch(PDO::FETCH_ASSOC)) {
-        //             $i++;
-        //             foreach ($reg as $clave => $valor) {
-        //                 $datos[$i][$clave] = $valor;
-        //             }
-        //         }
-        //     }
-        //     $query = null;
-        //     $con = null;
-        //     return $datos;
     }
-    // public function busca($tabla, $codigo)
-    // {
-    //     $conexion = $this->container->get('bd');
-    //     $sql = "call search$tabla(:codigo)";
-    //     $query = $conexion->prepare($sql);
-    //     $query->bindParam(':codigo', $codigo, PDO::PARAM_STR);
-    //     $query->execute();
-    //     $datos = $query->fetchAll();
-    //     $query = null;
-    //     $conexion = null;
-    //     return $datos;
-    // }
+    public function busca($codigo)
+    {
+        $conexion = $this->container->get('bd');
+        $sql = "call search_curso(:codigo)";
+        $query = $conexion->prepare($sql);
+        $query->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+        $query->execute();
+        $datos = $query->fetchAll();
+        $query = null;
+        $conexion = null;
+        return $datos;
+    }
     // public function guarda($tabla, $datos, $id)
     // {
     //     // die(var_dump($this->generarParam($datos)));

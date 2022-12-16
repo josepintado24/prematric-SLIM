@@ -12,14 +12,17 @@ class Curso extends AccesoBD
         $indice = $args['indice'];
         $limite = $args['limite'];
         $datos = $this->todo($indice, $limite);
+        $status = sizeof($datos) > 0 ? 200 : 204;
         $response->getBody()->write(json_encode($datos));
-        return $response;
+        return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
     }
     public function buscarCodigo(Request $request, Response $response, $args)
     {
         $codigo = $args['codigo'];
-        $response->getBody()->write("$codigo");
-        return $response;
+        $datos=$this->busca($codigo);
+        $response->getBody()->write(json_encode($datos));
+        $status = sizeof($datos) > 0 ? 200 : 204;
+        return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
     }
     public function crear(Request $request, Response $response, $args)
     {
