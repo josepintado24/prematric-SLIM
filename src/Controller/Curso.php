@@ -18,8 +18,8 @@ class Curso extends AccesoBD
     }
     public function buscarCodigo(Request $request, Response $response, $args)
     {
-        $codigo = $args['codigo'];
-        $datos=$this->buscar($codigo);
+        $codigo = $args['id'];
+        $datos = $this->buscar($codigo);
         $response->getBody()->write(json_encode($datos));
         $status = sizeof($datos) > 0 ? 200 : 404;
         return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
@@ -27,11 +27,20 @@ class Curso extends AccesoBD
     public function crear(Request $request, Response $response, $args)
     {
         $body = json_decode($request->getBody());
-        $datos=$this->guardar($body);
-        $status = $datos[0]>0 ? 409: 201;
+        $datos = $this->guardar($body);
+        $status = $datos[0] > 0 ? 409 : 201;
         $response->getBody()->write(json_encode($datos));
         return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
-
+    }
+    public function editar(Request $request, Response $response, $args)
+    {
+        $body = json_decode($request->getBody());
+        $id = $args['id'];
+        // Modificar 
+        $datos = $this->guardar($body, $id);
+        $status = $datos[0] > 0 ? 200 : 404;
+        $response->getBody()->write(json_encode($datos));
+        return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
     }
     public function filtrar(Request $request, Response $response, $args)
     {
@@ -46,17 +55,13 @@ class Curso extends AccesoBD
         $response->getBody()->write(json_encode($datos));
         return $response->withHeader('Content-Type', 'aplication/json')->withStatus(203);
     }
-    public function editar(Request $request, Response $response, $args)
-    {
-        $codigo = $args['codigo'];
-        $body = json_decode($request->getBody());
-        $response->getBody()->write(json_encode($body));
-        return $response->withHeader('Content-Type', 'aplication/json')->withStatus(203);
-    }
     public function eliminar(Request $request, Response $response, $args)
     {
-        $codigo = $args['codigo'];
-        $response->getBody()->write("$codigo  Eliminado de forma correcta");
-        return $response->withHeader('Content-Type', 'aplication/json')->withStatus(203);
+        $id = $args['id'];
+        // eliminar 
+        $datos = $this->elimina($id);
+        $status = $datos[0] > 0 ? 200 : 404;
+        $response->getBody()->write(json_encode($datos));
+        return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
     }
 }

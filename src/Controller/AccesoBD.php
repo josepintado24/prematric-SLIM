@@ -47,12 +47,12 @@ class AccesoBD
         $con = null;
         return $datos;
     }
-    public function buscar($codigo)
+    public function buscar($id)
     {
         $conexion = $this->container->get('bd');
-        $sql = "call search_curso(:codigo)";
+        $sql = "call search_curso(:id)";
         $query = $conexion->prepare($sql);
-        $query->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+        $query->bindParam(':id', $id, PDO::PARAM_STR);
         $query->execute();
         $datos = $query->fetchAll();
         $query = null;
@@ -73,34 +73,17 @@ class AccesoBD
         return $datos;
 
     }
-    // public function elimina($tabla, $codigo)
-    // {
-    //     $conexion = $this->container->get('bd');
-    //     $sql = "select delete$tabla(:codigo)";
-    //     $query = $conexion->prepare($sql);
-    //     $query->bindParam(':codigo', $codigo, PDO::PARAM_INT);
-    //     $query->execute();
-    //     $datos = $query->fetch(PDO::FETCH_NUM);
-    //     $query = null;
-    //     $conexion = null;
-    //     return $datos;
-    // }
-    // public function filtra($tabla, $p, $pagina, $lim)
-    // {
-    //     $ind = ($pagina - 1) * $lim;
-    //     $conexion = $this->container->get('bd');
-    //     $cad = "";
-    //     foreach ($p as $valor) {
-    //         $cad .= "%$valor%&";
-    //     }
-    //     $query = $conexion->prepare("call filter$tabla(:cadena,:indice, :limite);");
-    //     $query->bindParam(':cadena', $cad, PDO::PARAM_STR);
-    //     $query->bindParam(':indice', $ind, PDO::PARAM_INT);
-    //     $query->bindParam(':limite', $lim, PDO::PARAM_INT);
-    //     $query->execute();
-    //     $datos = $query->fetchAll();
-    //     $query = null;
-    //     $conexion = null;
-    //     return $datos;
-    // }
+    public function elimina($id)
+    {
+        $conexion = $this->container->get('bd');
+        $sql = "select delete_curso(:id)";
+        $query = $conexion->prepare($sql);
+        $query->bindParam(':id', $id, PDO::PARAM_STR);
+        $query->execute();
+        $datos = $query->fetch(PDO::FETCH_NUM);
+        $query = null;
+        $conexion = null;
+        return $datos;
+    }
+ 
 }
