@@ -7,11 +7,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class Curso extends AccesoBD
 {
-    public function consultarTodos(Request $request, Response $response, $args)
+    public function listar(Request $request, Response $response, $args)
     {
         $indice = $args['indice'];
         $limite = $args['limite'];
-        $datos = $this->todo($indice, $limite);
+        $datos = $this->lista($indice, $limite);
         $status = sizeof($datos) > 0 ? 200 : 204;
         $response->getBody()->write(json_encode($datos));
         return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
@@ -19,17 +19,19 @@ class Curso extends AccesoBD
     public function buscarCodigo(Request $request, Response $response, $args)
     {
         $codigo = $args['codigo'];
-        $datos=$this->busca($codigo);
+        $datos=$this->buscar($codigo);
         $response->getBody()->write(json_encode($datos));
-        $status = sizeof($datos) > 0 ? 200 : 204;
+        $status = sizeof($datos) > 0 ? 200 : 404;
         return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
     }
     public function crear(Request $request, Response $response, $args)
     {
         $body = json_decode($request->getBody());
-        $body->estado = "Guardado";
-        $response->getBody()->write(json_encode($body));
-        return $response->withHeader('Content-Type', 'aplication/json')->withStatus(201);
+        $datos=$this->guardar($body);
+        $status = $datos[0]>0 ? 409: 201;
+        $response->getBody()->write(json_encode($datos));
+        return $response->withHeader('Content-Type', 'aplication/json')->withStatus($status);
+
     }
     public function filtrar(Request $request, Response $response, $args)
     {
